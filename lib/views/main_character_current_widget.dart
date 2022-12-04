@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/main_character_data.dart';
+import 'NavBar.dart';
 
 class MainCharacterCurrentWidget extends StatelessWidget {
   final MainCharacterData _mainCharacterCurrent;
@@ -10,29 +11,39 @@ class MainCharacterCurrentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-          Image.network(
-            _mainCharacterCurrent.imageUrl,
-          ),
-        Text(
-          "firstname :${_mainCharacterCurrent.firstName}",
-          //style: const TextStyle(fontSize: 32,),
-        ),
-        Text(
-          "lastname: ${_mainCharacterCurrent.lastName}",
-        ),
-        Text(
-          "fullname: ${_mainCharacterCurrent.fullName}",
-        ),
-        Text(
-          "titles: ${_mainCharacterCurrent.title}",
-        ),
-        Text(
-          "family: ${_mainCharacterCurrent.family}",
-        ),
-      ],
+    return Scaffold(
+      drawer: navBar(),
+      appBar: AppBar(
+        title: const Text('Game of Thrones Character'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+              Image.network(
+                _mainCharacterCurrent.imageUrl,
+              ),
+            Text(
+              "firstname :${_mainCharacterCurrent.firstName}",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              "lastname: ${_mainCharacterCurrent.lastName}",
+            ),
+            Text(
+              "fullname: ${_mainCharacterCurrent.fullName}",
+            ),
+            Text(
+              "titles: ${_mainCharacterCurrent.title}",
+            ),
+            Text(
+              "family: ${_mainCharacterCurrent.family}",
+            ),
+          ],
 
+        ),
+      ),
     );
   }
 }
