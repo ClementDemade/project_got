@@ -1,37 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/intl_standalone.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:projet_got/repository/main_character_repository.dart';
+import 'package:projet_got/utils/api_service.dart';
 import 'package:projet_got/views/home.dart';
-import 'package:projet_got/views/home_data.dart';
 
-void main() async {
-  await initIntlAndLocale();
-  runApp(const MyApp());
-}
+import 'cubit/main_character_cubit.dart';
 
-Future<void> initIntlAndLocale() async {
-  Intl.defaultLocale = 'fr_FR';
-  await findSystemLocale();
-  await initializeDateFormatting(Intl.defaultLocale!, null);
+void main() {
+  runApp(MyApp(
+    apiService: ApiService(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key, required this.apiService}) : super(key: key);
 
-  // This widget is the root of your application.
+  final ApiService apiService;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Weather Bloc',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: Column(
-        children: const [
-          Expanded(child: Home()),
-        ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MainCharacterCubit>(
+          create: (context) => MainCharacterCubit(
+            apiRepository: MainCharacterRepository(
+              apiService: apiService,
+            ),
+          )..fetch(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        
+        home: const HomePage(),
       ),
     );
   }

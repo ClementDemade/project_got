@@ -32,6 +32,7 @@ class MainCharacterCurrentWidget extends StatelessWidget {
           "family: ${_mainCharacterCurrent.family}",
         ),
       ],
+
     );
   }
 }

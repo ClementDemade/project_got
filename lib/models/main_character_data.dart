@@ -1,9 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:projet_got/cubit/main_character_cubit.dart';
-
 part 'main_character_data.g.dart';
 
-@JsonSerializable()
 class MainCharacterData {
   final int id;
   final String firstName;
@@ -29,4 +25,17 @@ class MainCharacterData {
       _$MainCharacterDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$MainCharacterDataToJson(this);
+
+  factory MainCharacterData.fromMap(Map<String, dynamic> map) {
+    return MainCharacterData(
+      id: map['id'] as int,
+      firstName: map['firstName'] as String,
+      lastName: map['lastName'] as String,
+      fullName: map['fullName'] as String,
+      title: map['title'] as String,
+      family: map['family'] as String,
+      image: map['image'] as String,
+      imageUrl: map['imageUrl'] as String,
+    );
+  }
 }
