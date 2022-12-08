@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projet_got/cubit/main_character_cubit.dart';
 import 'package:projet_got/models/main_character_data.dart';
+import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/NavBar.dart';
 import 'package:projet_got/views/main_character_current_widget.dart';
 import 'package:projet_got/views/search_page.dart';
 
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key:key);
+  HomePage({Key? key,required this.favoris}) : super(key:key);
+  MainCharacterFavoriteRepository favoris;
 
   @override
   Widget build(BuildContext context) {
     Icon customIcon = const Icon(Icons.search);
     Widget customSearchBar = const Text('Game of Thrones Character');
     return Scaffold(
-      drawer: navBar(),
+      drawer: navBar(favorite: favoris),
       appBar: AppBar(
         title: customSearchBar,
         actions: [
           IconButton(
           onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const SearchPage())),
+              .push(MaterialPageRoute(builder: (_) => SearchPage())),
             icon: const Icon(Icons.search),
           )
         ],
@@ -54,11 +56,17 @@ class HomePage extends StatelessWidget {
                             Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
-                                      return MainCharacterCurrentWidget(mainCharacterData: mainCharacter);
+                                      return MainCharacterCurrentWidget(mainCharacterData: mainCharacter, favoriteRepository: favoris);
                                   },
                                   fullscreenDialog: true,
                             ));
                           },
+                          trailing: IconButton(
+                            onPressed: () => stateFavorite(mainCharacter),
+                            icon: favoris.getCharacter(mainCharacter.fullName)!= null
+                                ? Icon(Icons.favorite)
+                                : Icon(Icons.favorite_border),
+                          ),
                       );
                       }
                       );
@@ -70,4 +78,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  int stateFavorite(MainCharacterData character) {
+    if (this.favoris.removeCharacter(character.fullName) < 0 ) {
+      favoris.addCharacter(character);
+      return 1;
+    }
+    return -1;
+  }
 }

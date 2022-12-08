@@ -17,4 +17,20 @@ class MainCharacterRepository{
     }
   }
 
+  Future<MainCharacterData?> getCharacter(String name) async {
+    final response = await apiService.getPostData();
+    if (response != null) {
+      final data = response.data as List<dynamic>;
+      for (int i = 0; i<data.length;i++){
+        MainCharacterData character = MainCharacterData.fromJson(data[i]);
+        if ((character.firstName == name)||(character.fullName==name)||(character.lastName== name)){
+          return character;
+        }
+        return null;
+      }
+    }
+    return null;
+  }
+
+
 }

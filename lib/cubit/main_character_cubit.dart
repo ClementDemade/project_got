@@ -23,6 +23,16 @@ class MainCharacterCubit extends Cubit<MainCharacterState> {
     }
   }
 
+  Future<void> search(String name) async {
+    emit(MainCharacterLoading());
+    try{
+      final response = await apiRepository.getCharacter(name);
+      emit(CharacterSearchLoaded(mainCharacterData: response! ));
+    } catch(e) {
+      emit(MainCharacterError(message :e.toString()));
+    }
+  }
+
   @override
   void onChange(Change<MainCharacterState> change) {
     super.onChange(change);

@@ -17,6 +17,15 @@ class MainCharacterLoaded extends MainCharacterState {
   List<Object> get props => [mainCharacterData];
 }
 
+class CharacterSearchLoaded extends MainCharacterState {
+  final MainCharacterData mainCharacterData;
+
+  CharacterSearchLoaded({required this.mainCharacterData});
+
+  @override
+  List<Object> get props => [mainCharacterData];
+}
+
 class MainCharacterError extends MainCharacterState {
   final String message;
 

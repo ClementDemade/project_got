@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/home.dart';
 
 class navBar extends StatelessWidget{
+  navBar({Key? key,required this.favorite}) : super(key:key);
+  MainCharacterFavoriteRepository favorite;
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -18,18 +23,7 @@ class navBar extends StatelessWidget{
                       title: const Text('Accueil'),
                       onTap: () {
                         Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Profile'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(
-                            context,
-                            '/profile',
+                        MaterialPageRoute(builder: (context) => HomePage(favoris: favorite,)),
                         );
                       },
                     ),
