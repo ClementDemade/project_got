@@ -6,6 +6,7 @@ import 'package:projet_got/utils/api_service.dart';
 import 'package:projet_got/views/favorite_widget.dart';
 import 'package:projet_got/views/home.dart';
 import 'package:projet_got/views/search_page.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 import 'cubit/main_character_cubit.dart';
 
@@ -32,7 +33,21 @@ class MyApp extends StatelessWidget {
           )..fetch(),
         ),
       ],
-      child: MaterialApp(
+      child: AdaptiveTheme(
+        light: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.blue,
+        ),
+        dark: ThemeData(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.orange,
+        ),
+        initial: AdaptiveThemeMode.light,
+        builder: (theme, darkTheme) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Dark Mode',
+          theme: theme,
+          darkTheme: darkTheme,
           initialRoute: '/',
           routes: <String,WidgetBuilder> {
             '/': (BuildContext context) {
@@ -43,10 +58,10 @@ class MyApp extends StatelessWidget {
             },
             '/favorite': (BuildContext context) {
               return FavoritePage(initialfavoris: favoris);
-            }
-          },
-
-        ),
-      );
+            },
+        }
+      ),
+    ),
+    );
   }
 }

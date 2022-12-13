@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projet_got/cubit/main_character_cubit.dart';
@@ -5,12 +6,11 @@ import 'package:projet_got/models/main_character_data.dart';
 import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/NavBar.dart';
 import 'package:projet_got/views/main_character_current_widget.dart';
-import 'package:projet_got/views/search_page.dart';
-
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.initialfavoris}) : super(key: key);
   MainCharacterFavoriteRepository initialfavoris;
+
 
   @override
   HomePageState createState() => new HomePageState(favoris: initialfavoris);
@@ -18,22 +18,48 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   MainCharacterFavoriteRepository favoris;
+  bool darkmode = false;
+  dynamic savedThemeMode;
+
+  void initState() {
+    super.initState();
+    getCurrentTheme();
+  }
+
 
   HomePageState({required this.favoris});
   @override
   Widget build(BuildContext context) {
-    Icon customIcon = const Icon(Icons.search);
     Widget customSearchBar = const Text('Game of Thrones Character');
+    SwitchListTile switchButton =
+      SwitchListTile(
+        title: Text('Mode sombre'),
+        activeColor: Colors.orange,
+        secondary: const Icon(Icons.nightlight_round),
+        value: darkmode,
+        onChanged: (bool value) {
+          print(value);
+          if (value == true) {
+            AdaptiveTheme.of(context).setDark();
+          } else {
+            AdaptiveTheme.of(context).setLight();
+          }
+          setState(() {
+            darkmode = value;
+          });
+        },
+      );
     return Scaffold(
       drawer: navBar(favorite: favoris),
       appBar: AppBar(
         title: customSearchBar,
         actions: [
-          IconButton(
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => SearchPage())),
-            icon: const Icon(Icons.search),
-          )
+          ElevatedButton(
+            onPressed: () {
+              changeTheme();
+            },
+            child: Text('Changer le thème'),
+          ),
         ],
       ),
       body: Center(
@@ -85,6 +111,35 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future getCurrentTheme() async {
+    savedThemeMode = await AdaptiveTheme.getThemeMode();
+    if (savedThemeMode.toString() == 'AdaptiveThemeMode.dark') {
+      print('thème sombre');
+      setState(() {
+        darkmode = true;
+      });
+    } else {
+      print('thème clair');
+      setState(() {
+        darkmode = false;
+      });
+    }
+  }
+
+  void changeTheme() async {
+    if (darkmode == true) {
+      AdaptiveTheme.of(context).setDark();
+      setState(() {
+        darkmode = false;
+      });
+    } else {
+      AdaptiveTheme.of(context).setLight();
+      setState(() {
+        darkmode = true;
+      });
+    }
   }
 
   int stateFavorite(MainCharacterData character) {
