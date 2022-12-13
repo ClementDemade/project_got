@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/repository/main_character_repository.dart';
 import 'package:projet_got/utils/api_service.dart';
+import 'package:projet_got/views/favorite_widget.dart';
 import 'package:projet_got/views/home.dart';
+import 'package:projet_got/views/search_page.dart';
 
 import 'cubit/main_character_cubit.dart';
 
@@ -31,12 +33,20 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+          initialRoute: '/',
+          routes: <String,WidgetBuilder> {
+            '/': (BuildContext context) {
+              return HomePage(initialfavoris: favoris);
+            },
+            '/search': (BuildContext context) {
+              return SearchPage();
+            },
+            '/favorite': (BuildContext context) {
+              return FavoritePage(initialfavoris: favoris);
+            }
+          },
+
         ),
-        home: HomePage(favoris: favoris),
-      ),
-    );
+      );
   }
 }

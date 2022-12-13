@@ -27,6 +27,7 @@ class MainCharacterCubit extends Cubit<MainCharacterState> {
     emit(MainCharacterLoading());
     try{
       final response = await apiRepository.getCharacter(name);
+      print('Response : ' + response.toString());
       emit(CharacterSearchLoaded(mainCharacterData: response! ));
     } catch(e) {
       emit(MainCharacterError(message :e.toString()));

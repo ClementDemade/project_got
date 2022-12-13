@@ -20,5 +20,20 @@ class ApiService {
     }
   }
 
+  Future<Response?> getCharacterData(String name) async {
+    try {
+      String url = "https://www.thronesapi.com/api/v2/Characters";
+      var response = await Dio().get(
+        /*parametre de l'appel*/
+        "https://www.thronesapi.com/api/v2/Characters",
+      );
+      return response;
+    } on SocketException {
+      throw Exception();
+    } catch (err) {
+      print("error" + err.toString());
+    }
+  }
+
 
 }

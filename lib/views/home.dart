@@ -8,10 +8,18 @@ import 'package:projet_got/views/main_character_current_widget.dart';
 import 'package:projet_got/views/search_page.dart';
 
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key,required this.favoris}) : super(key:key);
+class HomePage extends StatefulWidget {
+  HomePage({Key? key, required this.initialfavoris}) : super(key: key);
+  MainCharacterFavoriteRepository initialfavoris;
+
+  @override
+  HomePageState createState() => new HomePageState(favoris: initialfavoris);
+}
+
+class HomePageState extends State<HomePage> {
   MainCharacterFavoriteRepository favoris;
 
+  HomePageState({required this.favoris});
   @override
   Widget build(BuildContext context) {
     Icon customIcon = const Icon(Icons.search);
@@ -53,7 +61,7 @@ class HomePage extends StatelessWidget {
                           title: Text(mainCharacter.fullName),
                           subtitle: Text(mainCharacter.title),
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.of(context).pop(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
                                       return MainCharacterCurrentWidget(mainCharacterData: mainCharacter, favoriteRepository: favoris);
@@ -66,6 +74,7 @@ class HomePage extends StatelessWidget {
                             icon: favoris.getCharacter(mainCharacter.fullName)!= null
                                 ? Icon(Icons.favorite)
                                 : Icon(Icons.favorite_border),
+
                           ),
                       );
                       }
@@ -80,9 +89,13 @@ class HomePage extends StatelessWidget {
 
   int stateFavorite(MainCharacterData character) {
     if (this.favoris.removeCharacter(character.fullName) < 0 ) {
-      favoris.addCharacter(character);
+      setState(() {
+        favoris.addCharacter(character);
+      });
       return 1;
     }
     return -1;
   }
+
+
 }

@@ -19,6 +19,7 @@ class MainCharacterRepository{
 
   Future<MainCharacterData?> getCharacter(String name) async {
     final response = await apiService.getPostData();
+
     if (response != null) {
       final data = response.data as List<dynamic>;
       for (int i = 0; i<data.length;i++){

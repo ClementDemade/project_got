@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projet_got/cubit/main_character_cubit.dart';
 import 'package:projet_got/models/main_character_data.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
 
-  final controller = TextEditingController();
+  @override
+  State<StatefulWidget> createState() => SearchPageState();
+}
 
+class SearchPageState extends State<SearchPage>{
+  final controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,27 +40,32 @@ class SearchPage extends StatelessWidget {
             ),
           )),
       body:Center(
-          child: BlocBuilder<MainCharacterCubit, MainCharacterState>(
-            builder: (context, state) {
-              if (state is MainCharacterLoading) {
-                return const CircularProgressIndicator();
-              } else if (state is MainCharacterError) {
-                return Text(state.message);
-              } else if (state is CharacterSearchLoaded) {
-                final mainCharacterList = state.mainCharacterData;
-                return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(state.mainCharacterData.imageUrl),),
-                    title: Text(state.mainCharacterData.fullName),
-                    subtitle: Text(state.mainCharacterData.title),
-                );
-              }
-              else {
-                return Text("null");
-              }
-            },
-          )
+          child: showCharacter(controller.text),
       )
+    );
+  }
+
+  Widget showCharacter(String name){
+
+    return BlocBuilder<MainCharacterCubit, MainCharacterState>(
+      builder: (context, state) {
+        if (state is MainCharacterLoading) {
+          return const CircularProgressIndicator();
+        } else if (state is MainCharacterError) {
+          return Text(state.message);
+        } else if (state is CharacterSearchLoaded) {
+          final mainCharacter = state.mainCharacterData;
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(mainCharacter.imageUrl),),
+            title: Text(mainCharacter.fullName),
+            subtitle: Text(mainCharacter.title),
+          );
+        }
+        else {
+          return Text("null");
+        }
+      },
     );
   }
 }

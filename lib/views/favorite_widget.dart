@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:projet_got/cubit/main_character_cubit.dart';
 import 'package:projet_got/models/main_character_data.dart';
 import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/NavBar.dart';
@@ -8,10 +6,18 @@ import 'package:projet_got/views/main_character_current_widget.dart';
 import 'package:projet_got/views/search_page.dart';
 
 
-class FavoritePage extends StatelessWidget {
-  FavoritePage({Key? key,required this.favoris}) : super(key:key);
+class FavoritePage extends StatefulWidget {
+  FavoritePage({Key? key, required this.initialfavoris}) : super(key: key);
+  MainCharacterFavoriteRepository initialfavoris;
+
+  @override
+  FavoritePageState createState() => FavoritePageState(favoris: initialfavoris);
+}
+
+class FavoritePageState extends State<FavoritePage> {
   MainCharacterFavoriteRepository favoris;
 
+  FavoritePageState({required this.favoris});
   @override
   Widget build(BuildContext context) {
     Icon customIcon = const Icon(Icons.search);
@@ -29,39 +35,37 @@ class FavoritePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Column(
-          children: [
-
-            return const SizedBox.shrink();
-          },
+        child: chooseDisplay(context),
         ),
-      ),
-    );
+      );
   }
 
   Widget chooseDisplay(BuildContext context) {
     if (favoris.mainCharacterFavorite.isEmpty ) {
       return const Text('No any Character');
     }
-    return buildColumnCharacter(context);
+    return buildColumnCharacter( context);
   }
 
   Widget buildColumnCharacter(BuildContext context) {
     return Column(
       children: [
         for (var favoriteCharacter in favoris.getAll().entries)
-
+          buildListTile(context, favoris.getCharacter(favoriteCharacter.key))
       ],
     );
   }
 
-  ListTile buildListTile(BuildContext context,MainCharacterData mainCharacterData){
-    ListTile(
+  ListTile buildListTile(BuildContext context,MainCharacterData? mainCharacterData){
+    if (mainCharacterData.toString() == null){
+      return ListTile(leading: Text("null"));
+    }
+    return ListTile(
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(mainCharacter.imageUrl),
+        backgroundImage: NetworkImage(mainCharacterData!.imageUrl),
       ),
-      title: Text(mainCharacter.fullName),
-      subtitle: Text(mainCharacter.title),
+      title: Text(mainCharacterData.fullName),
+      subtitle: Text(mainCharacterData.title),
       onTap: () {
         Navigator.of(context).push(
             MaterialPageRoute(
@@ -79,4 +83,22 @@ class FavoritePage extends StatelessWidget {
       ),
     );
   }
+
+  int stateFavorite(MainCharacterData character) {
+    if (this.favoris.getCharacter(character.fullName) == null ) {
+      setState(() {
+        favoris.addCharacter(character);
+      });
+      return 1;
+    }
+    else if (this.favoris.getCharacter(character.fullName) == null){
+      setState(() {
+        favoris.removeCharacter(character.fullName);
+      });
+      return -1;
+    }
+
+    return -1;
+  }
+
 }
