@@ -1,11 +1,14 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:projet_got/cubit/main_character_cubit.dart';
 import 'package:projet_got/models/main_character_data.dart';
 import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/NavBar.dart';
 import 'package:projet_got/views/main_character_current_widget.dart';
+import 'package:shake/shake.dart';
+import 'package:vibration/vibration.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.initialfavoris}) : super(key: key);
@@ -23,32 +26,16 @@ class HomePageState extends State<HomePage> {
 
   void initState() {
     super.initState();
-    getCurrentTheme();
+    ShakeDetector detector = ShakeDetector.autoStart(onPhoneShake: () {
+      Vibration.vibrate();
+    });
   }
-
 
   HomePageState({required this.favoris});
   @override
   Widget build(BuildContext context) {
+    loadCharacter();
     Widget customSearchBar = const Text('Game of Thrones Character');
-    SwitchListTile switchButton =
-      SwitchListTile(
-        title: Text('Mode sombre'),
-        activeColor: Colors.orange,
-        secondary: const Icon(Icons.nightlight_round),
-        value: darkmode,
-        onChanged: (bool value) {
-          print(value);
-          if (value == true) {
-            AdaptiveTheme.of(context).setDark();
-          } else {
-            AdaptiveTheme.of(context).setLight();
-          }
-          setState(() {
-            darkmode = value;
-          });
-        },
-      );
     return Scaffold(
       drawer: navBar(favorite: favoris),
       appBar: AppBar(
@@ -87,7 +74,7 @@ class HomePageState extends State<HomePage> {
                           title: Text(mainCharacter.fullName),
                           subtitle: Text(mainCharacter.title),
                           onTap: () {
-                            Navigator.of(context).pop(
+                            Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {
                                       return MainCharacterCurrentWidget(mainCharacterData: mainCharacter, favoriteRepository: favoris);
@@ -113,37 +100,33 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Future getCurrentTheme() async {
-    savedThemeMode = await AdaptiveTheme.getThemeMode();
-    if (savedThemeMode.toString() == 'AdaptiveThemeMode.dark') {
-      print('thème sombre');
-      setState(() {
-        darkmode = true;
-      });
-    } else {
-      print('thème clair');
-      setState(() {
-        darkmode = false;
-      });
-    }
-  }
-
   void changeTheme() async {
-    if (darkmode == true) {
-      AdaptiveTheme.of(context).setDark();
-      setState(() {
-        darkmode = false;
-      });
-    } else {
+    if (darkmode == false) {
       AdaptiveTheme.of(context).setLight();
       setState(() {
         darkmode = true;
       });
+    } else {
+      AdaptiveTheme.of(context).setDark();
+      setState(() {
+        darkmode = false;
+      });
     }
   }
 
+  Future<Widget?> loadCharacter() async {
+    if (await Permission.sensors.isLimited) {
+      return AlertDialog(
+        title: Text("alert"),
+        content: Text("l'utilisation des capteurs est limité"),
+      );
+    }
+    return null;
+  }
+
   int stateFavorite(MainCharacterData character) {
-    if (this.favoris.removeCharacter(character.fullName) < 0 ) {
+    Vibration.vibrate();
+    if (favoris.removeCharacter(character.fullName) < 0 ) {
       setState(() {
         favoris.addCharacter(character);
       });

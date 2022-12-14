@@ -4,6 +4,7 @@ import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/NavBar.dart';
 import 'package:projet_got/views/main_character_current_widget.dart';
 import 'package:projet_got/views/search_page.dart';
+import 'package:vibration/vibration.dart';
 
 
 class FavoritePage extends StatefulWidget {
@@ -85,13 +86,14 @@ class FavoritePageState extends State<FavoritePage> {
   }
 
   int stateFavorite(MainCharacterData character) {
-    if (this.favoris.getCharacter(character.fullName) == null ) {
+    Vibration.vibrate();
+    if (favoris.getCharacter(character.fullName) == null ) {
       setState(() {
         favoris.addCharacter(character);
       });
       return 1;
     }
-    else if (this.favoris.getCharacter(character.fullName) == null){
+    else if (favoris.getCharacter(character.fullName) != null){
       setState(() {
         favoris.removeCharacter(character.fullName);
       });

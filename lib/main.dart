@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
         dark: ThemeData(
           brightness: Brightness.dark,
-          primarySwatch: Colors.orange,
+          primarySwatch: Colors.red,
         ),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) => MaterialApp(
