@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:projet_got/models/main_character_data.dart';
 import 'package:projet_got/repository/main_character_repository.dart';
 

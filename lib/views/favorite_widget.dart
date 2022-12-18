@@ -1,9 +1,9 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:projet_got/models/main_character_data.dart';
 import 'package:projet_got/repository/main_character_favorite_repository.dart';
 import 'package:projet_got/views/NavBar.dart';
 import 'package:projet_got/views/main_character_current_widget.dart';
-import 'package:projet_got/views/search_page.dart';
 import 'package:vibration/vibration.dart';
 
 
@@ -28,11 +28,12 @@ class FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         title: customSearchBar,
         actions: [
-          IconButton(
-            onPressed: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => SearchPage())),
-            icon: const Icon(Icons.search),
-          )
+          ElevatedButton(
+            onPressed: () {
+              changeTheme();
+            },
+            child: Text('Changer le thème'),
+          ),
         ],
       ),
       body: Center(
@@ -101,6 +102,14 @@ class FavoritePageState extends State<FavoritePage> {
     }
 
     return -1;
+  }
+
+  void changeTheme() async {
+    if (AdaptiveTheme.of(context).isDefault){
+      AdaptiveTheme.of(context).setDark();
+    } else {
+      AdaptiveTheme.of(context).setLight();
+    }
   }
 
 }

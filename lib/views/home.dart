@@ -21,7 +21,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   MainCharacterFavoriteRepository favoris;
-  bool darkmode = false;
   dynamic savedThemeMode;
 
   void initState() {
@@ -101,16 +100,10 @@ class HomePageState extends State<HomePage> {
   }
 
   void changeTheme() async {
-    if (darkmode == false) {
-      AdaptiveTheme.of(context).setLight();
-      setState(() {
-        darkmode = true;
-      });
-    } else {
+    if (AdaptiveTheme.of(context).isDefault){
       AdaptiveTheme.of(context).setDark();
-      setState(() {
-        darkmode = false;
-      });
+    } else {
+      AdaptiveTheme.of(context).setLight();
     }
   }
 
@@ -132,6 +125,7 @@ class HomePageState extends State<HomePage> {
       });
       return 1;
     }
+    setState(() {});
     return -1;
   }
 

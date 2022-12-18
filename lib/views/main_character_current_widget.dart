@@ -28,7 +28,7 @@ class MainCharacterCurrentWidget extends StatelessWidget {
             Text(
               "firstname :${_mainCharacterCurrent.firstName}",
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             Text(

@@ -29,17 +29,6 @@ class navBar extends StatelessWidget{
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.search),
-                      title: const Text('Recherche'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushNamed(
-                            context,
-                            '/search'
-                        );
-                      },
-                    ),
-                    ListTile(
                       leading: const Icon(Icons.favorite_border),
                       title: const Text('Favoris'),
                       onTap: () {
